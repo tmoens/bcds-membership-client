@@ -1,36 +1,41 @@
-<div fxLaout="column" fxAlign="center">
-  <mat-card style="width: 400px">
-    <h2>Membership Check For Individuals</h2>
-    <mat-divider></mat-divider>
-    <mat-card-content >
-      <form [formGroup]="playerForm" style="width:200px" (ngSubmit)="onSubmit()">
-        <div fxLayout="column" fxLayoutAlign="space-around">
-          <mat-form-field appearance="fill">
-            <mat-label>First Name</mat-label>
-            <input matInput placeholder="First Name" formControlName="firstName">
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Last Name</mat-label>
-            <input matInput placeholder="First Name" required formControlName="lastName">
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>PDGA Number</mat-label>
-            <input matInput placeholder="First Name" formControlName="pdgaNumber">
-          </mat-form-field>
+<mat-card style="width: 400px; margin-top: 10px">
+  <h2>Membership Check For Individuals</h2>
+  <mat-tab-group>
+    <mat-tab label="Check by PDGA Number">
+      <div fxLayout="column" fxLayoutAlign="start center" style="margin-top: 20px">
+        <mat-form-field appearance="fill">
+          <mat-label>PDGA Number</mat-label>
+          <input matInput type="number" placeholder="PDGA Number" [formControl]="pdgaNumberFC">
+        </mat-form-field>
+        <mat-progress-bar *ngIf="isLoadingPdgaPlayer" mode="indeterminate"></mat-progress-bar>
+        <mat-form-field *ngIf="bcdsMembershipView" style="width: 300px">
+          <mat-label>BCDS Player & Status</mat-label>
+          <textarea matInput name="name"
+                    ngModel="{{bcdsMembershipView}} " disabled>
+              </textarea>
+        </mat-form-field>
+        <mat-form-field *ngIf="pdgaMembershipView" style="width: 300px">
+          <mat-label>PDGA Player & Status</mat-label>
+          <textarea matInput name="name"
+                    ngModel="{{pdgaMembershipView}} " disabled>
+              </textarea>
+        </mat-form-field>
+      </div>
+    </mat-tab>
+    <mat-tab label="Check By Name">
+      <div fxLayout="column" fxLayoutAlign="start center" style="margin-top: 20px">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <mat-hint>Minimum 4 letters.</mat-hint>
+          <input matInput placeholder="Name" [formControl]="nameFC">
+        </mat-form-field>
+        <mat-progress-bar *ngIf="isLoadingMembers" mode="indeterminate"></mat-progress-bar>
+        <div *ngIf="membersByName">
+          <ul *ngFor="let m of membersByName">
+            {{m.name}}{{(m.pdgaNumber) ? ' (' + m.pdgaNumber + ')' : ''}}, {{m.state}}
+          </ul>
         </div>
-        <mat-divider></mat-divider>
-        <button type="submit"
-                mat-button
-                [disabled]="!playerForm.valid"
-                color="primary">
-          Check Player
-        </button>
-      </form>
-    </mat-card-content>
-    <mat-divider></mat-divider>
-    <div *ngFor="let m of memberships">
-      From: {{m.validFrom.substring(0,10)}} To: {{m.validUntil.substring(0,10)}}
-    </div>
-  </mat-card>
-  <p></p>
-</div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

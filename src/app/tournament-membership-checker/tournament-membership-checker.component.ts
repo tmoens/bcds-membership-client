@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MembershipService} from '../membership/membershipService';
 import {FormControl, Validators} from '@angular/forms';
-import {MembershipStatusReport} from '../membershi-status-report';
 import {PdgaTournamentData} from '../dtos/pdga-tournament-data';
 import {debounceTime} from 'rxjs/operators';
+import {BcdsTournamentMembershipReport, BdcsMemberMini} from '../dtos/membership-status-report';
+import {MembershipState} from '../dtos/membership-state';
 
 @Component({
   selector: 'app-tournament-membership-checker',
@@ -12,7 +13,10 @@ import {debounceTime} from 'rxjs/operators';
 })
 export class TournamentMembershipCheckerComponent implements OnInit {
   currentTournament: PdgaTournamentData | null = null;
-  membershipStatus: MembershipStatusReport = new MembershipStatusReport();
+  membershipReport: BcdsTournamentMembershipReport | null = null;
+  isBcTournament: boolean = false;
+  isLoadingTournament = false;
+  isLoadingMembershipReport = false;
   constructor(
     private service: MembershipService
   ) { }
@@ -23,23 +27,42 @@ export class TournamentMembershipCheckerComponent implements OnInit {
       .subscribe(data => this.tournamentIdChanged(data));
   }
 
-  tournamentIdFC = new FormControl('',Validators.pattern('\d{4,}'));
+  tournamentIdFC = new FormControl('',Validators.pattern('[0-9]{4,}'));
 
   check() {
+    this.isLoadingMembershipReport = true;
     this.service.checkTournament(this.tournamentIdFC.value)
     .subscribe(data => {
-      this.membershipStatus = data as MembershipStatusReport;
+      this.isLoadingMembershipReport = false;
+      this.membershipReport = data as BcdsTournamentMembershipReport;
     });
   }
 
   tournamentIdChanged(tournamentId: string) {
-    if (Number(tournamentId) < 1000) return; // ignore really old tournaments
+    this.isBcTournament = false;
+    this.membershipReport = null;
+    this.isLoadingTournament = true;
     this.service.getTournamentData(this.tournamentIdFC.value)
       .subscribe((data) => {
-      this.currentTournament = data;
+        this.isLoadingTournament = false;
+        this.currentTournament = data;
+        if (this.currentTournament) {
+          this.isBcTournament = (this.currentTournament.state_prov === "BC")
+        }
       }
     );
   }
 
-
+  activeMemberFilter(m: BdcsMemberMini): boolean {
+    return m.state === MembershipState.ACTIVE_MEMBER;
+  }
+  nonMemberFilter(m: BdcsMemberMini): boolean {
+    return m.state !== MembershipState.ACTIVE_MEMBER;
+  }
+  previousMemberFilter(m: BdcsMemberMini): boolean {
+    return m.state === MembershipState.PREVIOUS_MEMBER;
+  }
+  neverMemberFilter(m: BdcsMemberMini): boolean {
+    return m.state === MembershipState.PLAYER_NOT_KNOWN;
+  }
 }

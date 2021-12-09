@@ -17,19 +17,31 @@ export class MembershipService {
   ) {  }
 
 
-  getMemberships(firstName: string, lastName: string, pdgaNumber: string) {
-    return this.http.get(environment.serverPrefix + '/get-memberships',
+  getMembershipByPdgaNumber(pdgaNumber: string) {
+    return this.http.get(environment.serverPrefix + '/get-membership-by-pdga-number',
       {
         observe: 'body',
         responseType: 'json',
         params: {
-          firstName: firstName,
-          lastName: lastName,
           pdgaNumber: pdgaNumber,
         }
       })
       .pipe(
-        catchError(this.handleError('Fetching memberships', []))
+        catchError(this.handleError('Fetching membership by pdga number', []))
+      )
+  }
+
+  getMembershipsByName(name: string) {
+    return this.http.get(environment.serverPrefix + '/get-memberships-by-name',
+      {
+        observe: 'body',
+        responseType: 'json',
+        params: {
+          name: name,
+        }
+      })
+      .pipe(
+        catchError(this.handleError('Fetching memberships by name', []))
       )
   }
 
