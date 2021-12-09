@@ -1,0 +1,36 @@
+<div fxLaout="column" fxAlign="center">
+  <mat-card style="width: 400px">
+    <h2>Membership Check For Individuals</h2>
+    <mat-divider></mat-divider>
+    <mat-card-content >
+      <form [formGroup]="playerForm" style="width:200px" (ngSubmit)="onSubmit()">
+        <div fxLayout="column" fxLayoutAlign="space-around">
+          <mat-form-field appearance="fill">
+            <mat-label>First Name</mat-label>
+            <input matInput placeholder="First Name" formControlName="firstName">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Last Name</mat-label>
+            <input matInput placeholder="First Name" required formControlName="lastName">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>PDGA Number</mat-label>
+            <input matInput placeholder="First Name" formControlName="pdgaNumber">
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        <button type="submit"
+                mat-button
+                [disabled]="!playerForm.valid"
+                color="primary">
+          Check Player
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <div *ngFor="let m of memberships">
+      From: {{m.validFrom.substring(0,10)}} To: {{m.validUntil.substring(0,10)}}
+    </div>
+  </mat-card>
+  <p></p>
+</div>
