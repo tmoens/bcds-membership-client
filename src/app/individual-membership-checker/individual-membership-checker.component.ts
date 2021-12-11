@@ -3,8 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MembershipService} from '../membership/membershipService';
 import {debounceTime} from 'rxjs/operators';
 import {MemberAndPdgaPlayerData} from '../dtos/MemberByPdgaNumber';
-import {MembershipState} from '../dtos/membership-state';
 import {BdcsMemberMini} from '../dtos/membership-status-report';
+import {AppStateService} from '../app-state.service';
 
 @Component({
   selector: 'app-individual-membership-checker',
@@ -13,17 +13,20 @@ import {BdcsMemberMini} from '../dtos/membership-status-report';
 })
 
 export class IndividualMembershipCheckerComponent implements OnInit {
-  JSON = JSON;
   pdgaMembershipView: string | null = null;
   bcdsMembershipView: string | null = null;
   membersByName: BdcsMemberMini[] | null = null;
   isLoadingPdgaPlayer = false;
   isLoadingMembers = false;
-  constructor(
-    private service: MembershipService
-  ) { }
   nameFC = new FormControl('', Validators.pattern('^[A-Za-z \-]{3,}'));
   pdgaNumberFC = new FormControl('', Validators.pattern('[0-9]+'));
+
+  constructor(
+    public appState: AppStateService,
+    private service: MembershipService,
+  ) {
+    this.appState.setActiveTool('individual');
+  }
 
   ngOnInit(): void {
     this.pdgaNumberFC.valueChanges

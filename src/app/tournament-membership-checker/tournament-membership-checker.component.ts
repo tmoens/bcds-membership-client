@@ -5,6 +5,7 @@ import {PdgaTournamentData} from '../dtos/pdga-tournament-data';
 import {debounceTime} from 'rxjs/operators';
 import {BcdsTournamentMembershipReport, BdcsMemberMini} from '../dtos/membership-status-report';
 import {MembershipState} from '../dtos/membership-state';
+import {AppStateService} from '../app-state.service';
 
 @Component({
   selector: 'app-tournament-membership-checker',
@@ -18,8 +19,11 @@ export class TournamentMembershipCheckerComponent implements OnInit {
   isLoadingTournament = false;
   isLoadingMembershipReport = false;
   constructor(
-    private service: MembershipService
-  ) { }
+    public appState: AppStateService,
+    private service: MembershipService,
+  ) {
+    this.appState.setActiveTool('tournament');
+  }
 
   ngOnInit(): void {
     this.tournamentIdFC.valueChanges
@@ -27,7 +31,7 @@ export class TournamentMembershipCheckerComponent implements OnInit {
       .subscribe(data => this.tournamentIdChanged(data));
   }
 
-  tournamentIdFC = new FormControl('',Validators.pattern('[0-9]{4,}'));
+  tournamentIdFC = new FormControl('',Validators.pattern('[0-9]{2,}'));
 
   check() {
     this.isLoadingMembershipReport = true;

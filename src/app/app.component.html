@@ -1,15 +1,38 @@
 <div>
-  <mat-toolbar color="primary" fxLayoutGap="20px">
-    <span>BCDS Membership Checker</span>
-    <span class="fill-remaining-space"></span>
-    <mat-list-item routerLink="tournament">
-      Tournament
-    </mat-list-item>
-    <mat-list-item routerLink="individual">
-      Individual
-    </mat-list-item>
-  </mat-toolbar>
+  <div *ngIf="appState.screenSize >= ScreenSizes.LARGE">
+    <mat-toolbar color="primary" fxLayoutGap="20px">
+      <span>BCDS Membership Checker</span>
+      <span class="fill-remaining-space"></span>
+      <button mat-button [disabled]="appState.activeTool === 'tournament'" routerLink="tournament">
+        Tournament
+      </button>
+      <button mat-button [disabled]="appState.activeTool === 'individual'" routerLink="individual">
+        Individual
+      </button>
+    </mat-toolbar>
+  </div>
+  <div *ngIf="appState.screenSize < ScreenSizes.LARGE">
+    <mat-toolbar color="primary" fxLayoutGap="20px">
+      <button mat-button [matMenuTriggerFor]="toolMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <span>BCDS Membership Checker</span>
+      <mat-menu #toolMenu="matMenu">
+        <button mat-menu-item [disabled]="appState.activeTool === 'tournament'"
+                routerLink="tournament">
+          <mat-icon>launch</mat-icon>
+          Tournament
+        </button>
+        <button mat-menu-item [disabled]="appState.activeTool === 'individual'"
+                routerLink="individual">
+          <mat-icon>launch</mat-icon>
+          Individual
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+  </div>
 </div>
 <div fxLayout="column" fxLayoutAlign="start center">
   <router-outlet></router-outlet>
 </div>
+

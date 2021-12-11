@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +20,12 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {AppStateService} from './app-state.service';
+import {MatMenuModule} from '@angular/material/menu';
+
+export function appStateProviderFactory(provider: AppStateService) {
+  return () => provider.initialize();
+}
 
 @NgModule({
   declarations: [
@@ -45,8 +51,10 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     MatSnackBarModule,
     MatTabsModule,
     MatProgressBarModule,
+    MatMenuModule,
   ],
   providers: [
+    {provide: APP_INITIALIZER, useFactory: appStateProviderFactory, deps: [AppStateService], multi: true},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
   ],
   bootstrap: [AppComponent]
