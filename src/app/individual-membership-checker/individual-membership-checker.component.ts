@@ -5,6 +5,7 @@ import {debounceTime} from 'rxjs/operators';
 import {MemberAndPdgaPlayerData} from '../dtos/MemberByPdgaNumber';
 import {BdcsMemberMini} from '../dtos/membership-status-report';
 import {AppStateService} from '../app-state.service';
+import {PdgaPlayerData} from '../dtos/pdga-player-data';
 
 @Component({
   selector: 'app-individual-membership-checker',
@@ -13,9 +14,9 @@ import {AppStateService} from '../app-state.service';
 })
 
 export class IndividualMembershipCheckerComponent implements OnInit {
-  pdgaMembershipView: string | null = null;
-  bcdsMembershipView: string | null = null;
-  membersByName: BdcsMemberMini[] | null = null;
+  pdgaPlayer: PdgaPlayerData | null = null;
+  bcdsPlayer: BdcsMemberMini | null = null;
+  membersByName: BdcsMemberMini[] | null = [];
   isLoadingPdgaPlayer = false;
   isLoadingMembers = false;
   nameFC = new FormControl('', Validators.pattern('^[A-Za-z \-]{3,}'));
@@ -39,22 +40,22 @@ export class IndividualMembershipCheckerComponent implements OnInit {
 
   onPdgaNumberChange(value: any) {
     this.isLoadingPdgaPlayer = true;
-    this.pdgaMembershipView = null;
-    this.bcdsMembershipView = null;
+    this.pdgaPlayer = null;
+    this.bcdsPlayer = null;
     if (!this.pdgaNumberFC.value) { return }
     this.service.getMembershipByPdgaNumber(this.pdgaNumberFC.value)
       .subscribe((data) => {
         this.isLoadingPdgaPlayer = false;
         const p = data as MemberAndPdgaPlayerData;
         if (p.pdgaPlayer) {
-          this.pdgaMembershipView = `${p.pdgaPlayer.first_name} ${p.pdgaPlayer.last_name}, ${p.pdgaPlayer.membership_status}`
+          this.pdgaPlayer = p.pdgaPlayer;
         } else {
-          this.pdgaMembershipView = 'Player not found';
+          this.pdgaPlayer = null;
         }
-        if (p.membership && p.membership.name && p.membership.state) {
-          this.bcdsMembershipView = `${p.membership.name}, ${p.membership.state}`;
+        if (p.membership) {
+          this.bcdsPlayer = p.membership;
         } else {
-          this.bcdsMembershipView = 'Player not found';
+          this.bcdsPlayer = null;
         }
       });
   }

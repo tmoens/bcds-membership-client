@@ -8,18 +8,21 @@
           <input matInput type="number" placeholder="PDGA Number" [formControl]="pdgaNumberFC">
         </mat-form-field>
         <mat-progress-bar *ngIf="isLoadingPdgaPlayer" mode="indeterminate"></mat-progress-bar>
-        <mat-form-field *ngIf="bcdsMembershipView" style="width: 300px">
-          <mat-label>BCDS Player & Status</mat-label>
-          <textarea matInput name="name"
-                    ngModel="{{bcdsMembershipView}} " disabled>
-              </textarea>
-        </mat-form-field>
-        <mat-form-field *ngIf="pdgaMembershipView" style="width: 300px">
-          <mat-label>PDGA Player & Status</mat-label>
-          <textarea matInput name="name"
-                    ngModel="{{pdgaMembershipView}} " disabled>
-              </textarea>
-        </mat-form-field>
+        <h4 *ngIf="bcdsPlayer">BCDS:
+          {{bcdsPlayer.name}} ({{bcdsPlayer.state}})
+        </h4>
+        <h3 *ngIf="!bcdsPlayer">BCDS:
+          Not known.
+        </h3>
+        <h5 *ngIf="pdgaPlayer">PDGA:
+          <a href="https://pdga.com/player/{{pdgaPlayer.pdga_number}}"
+             target="_blank">
+            {{pdgaPlayer.first_name}} {{pdgaPlayer.last_name}}
+          </a> ({{pdgaPlayer.membership_status}})
+        </h5>
+        <h5 *ngIf="!pdgaPlayer">PDGA:
+          Not known.
+        </h5>
       </div>
     </mat-tab>
     <mat-tab label="Check By Name">
@@ -31,9 +34,18 @@
         </mat-form-field>
         <mat-progress-bar *ngIf="isLoadingMembers" mode="indeterminate"></mat-progress-bar>
         <div *ngIf="membersByName">
-          <ul *ngFor="let m of membersByName">
-            {{m.name}}{{(m.pdgaNumber) ? ' (' + m.pdgaNumber + ')' : ''}}, {{m.state}}
-          </ul>
+          <div *ngFor="let m of membersByName">
+            <ul *ngIf="m.pdgaNumber">
+              <a href="https://pdga.com/player/{{m.pdgaNumber}}"
+                 target="_blank">
+                {{m.name}}
+              </a> ({{m.state}})
+
+            </ul>
+            <ul *ngIf="!m.pdgaNumber">
+              {{m.name}} ({{m.state}})
+            </ul>
+          </div>
         </div>
       </div>
     </mat-tab>

@@ -10,16 +10,10 @@
         </mat-form-field>
         <mat-progress-bar *ngIf="isLoadingTournament" mode="indeterminate" style="width: 200px"></mat-progress-bar>
         <div *ngIf="currentTournament">
-          <mat-form-field style="width: 300px">
-            <mat-label>Tournament Name</mat-label>
-            <textarea matInput name="name"
-                      ngModel="{{currentTournament.tournament_name}}" disabled>
-              </textarea>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Date</mat-label>
-            <input matInput name="date" ngModel="{{currentTournament.start_date}}" disabled>
-          </mat-form-field>
+          <a href="https://pdga.com/tour/event/{{currentTournament.tournament_id}}"
+          target="_blank">
+            {{currentTournament.tournament_name}} {{currentTournament.start_date}}
+          </a>
         </div>
         <div *ngIf="!currentTournament && !isLoadingTournament && tournamentIdFC.value ">
           Tournament {{tournamentIdFC.value}} not found.
@@ -41,13 +35,24 @@
 <div *ngIf="membershipReport && membershipReport.players && membershipReport.players.length > 0">
   <mat-tab-group>
     <mat-tab label="Non Members">
-      <div *ngFor="let p of membershipReport.players.filter(nonMemberFilter)">
-        <ul> {{p.name}} {{p.pdgaNumber}}</ul>
+      <div *ngFor="let m of membershipReport.players.filter(nonMemberFilter)">
+        <ul *ngIf="m.pdgaNumber">
+          <a href="https://pdga.com/player/{{m.pdgaNumber}}"
+             target="_blank">
+            {{m.name}}
+          </a> ({{m.state}})
+        </ul>
+        <ul *ngIf="!m.pdgaNumber">
+          {{m.name}} ({{m.state}})
+        </ul>
       </div>
     </mat-tab>
     <mat-tab label="Members">
-      <div *ngFor="let p of membershipReport.players.filter(activeMemberFilter)">
-        <ul> {{p.name}} {{p.pdgaNumber}}</ul>
+      <div *ngFor="let m of membershipReport.players.filter(activeMemberFilter)">
+        <ul *ngIf="m.pdgaNumber">
+          <a href="https://pdga.com/player/{{m.pdgaNumber}}" target="_blank">{{m.name}}</a>
+        </ul>
+        <ul *ngIf="!m.pdgaNumber">{{m.name}}</ul>
       </div>
     </mat-tab>
   </mat-tab-group>
