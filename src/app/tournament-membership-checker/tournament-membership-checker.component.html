@@ -37,20 +37,22 @@
     <mat-tab label="Non Members">
       <div *ngFor="let m of membershipReport.players.filter(nonMemberFilter)">
         <ul *ngIf="m.pdgaNumber">
+          {{m.name}}
           <a href="https://pdga.com/player/{{m.pdgaNumber}}"
              target="_blank">
-            {{m.name}}
+            {{m.pdgaNumber}}
           </a> ({{m.state}})
         </ul>
         <ul *ngIf="!m.pdgaNumber">
-          {{m.name}} ({{m.state}})
+          {{m.name}} {{m.state}}
         </ul>
       </div>
     </mat-tab>
     <mat-tab label="Members">
       <div *ngFor="let m of membershipReport.players.filter(activeMemberFilter)">
         <ul *ngIf="m.pdgaNumber">
-          <a href="https://pdga.com/player/{{m.pdgaNumber}}" target="_blank">{{m.name}}</a>
+          {{m.name}}
+          <a href="https://pdga.com/player/{{m.pdgaNumber}}" target="_blank">{{m.pdgaNumber}}</a>
         </ul>
         <ul *ngIf="!m.pdgaNumber">{{m.name}}</ul>
       </div>
