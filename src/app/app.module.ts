@@ -22,6 +22,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {AppStateService} from './app-state.service';
 import {MatMenuModule} from '@angular/material/menu';
+import { DiscGolfSceneMembershipCheckerComponent } from './disc-golf-scene-membership-checker/disc-golf-scene-membership-checker.component';
 
 export function appStateProviderFactory(provider: AppStateService) {
   return () => provider.initialize();
@@ -31,7 +32,8 @@ export function appStateProviderFactory(provider: AppStateService) {
   declarations: [
     AppComponent,
     TournamentMembershipCheckerComponent,
-    IndividualMembershipCheckerComponent
+    IndividualMembershipCheckerComponent,
+    DiscGolfSceneMembershipCheckerComponent
   ],
   imports: [
     BrowserModule,

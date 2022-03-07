@@ -9,6 +9,9 @@
       <button mat-button [disabled]="appState.activeTool === 'individual'" routerLink="individual">
         Individual
       </button>
+      <button mat-button [disabled]="appState.activeTool === 'disc_golf_scene'" routerLink="disc_golf_scene">
+        Disc Golf Scene
+      </button>
     </mat-toolbar>
   </div>
   <div *ngIf="appState.screenSize < ScreenSizes.LARGE">
@@ -27,6 +30,11 @@
                 routerLink="individual">
           <mat-icon>launch</mat-icon>
           Individual
+        </button>
+        <button mat-menu-item [disabled]="appState.activeTool === 'disc_golf_scene'"
+                routerLink="disc_golf_scene">
+          <mat-icon>launch</mat-icon>
+          Disc Golf Scene
         </button>
       </mat-menu>
     </mat-toolbar>

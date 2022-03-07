@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 import {MembershipService} from '../membership/membershipService';
-import {debounceTime} from 'rxjs/operators';
 import {MemberAndPdgaPlayerData} from '../dtos/MemberByPdgaNumber';
 import {BdcsMemberMini} from '../dtos/membership-status-report';
 import {AppStateService} from '../app-state.service';
