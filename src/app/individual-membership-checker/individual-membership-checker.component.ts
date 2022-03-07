@@ -5,6 +5,7 @@ import {MemberAndPdgaPlayerData} from '../dtos/MemberByPdgaNumber';
 import {BdcsMemberMini} from '../dtos/membership-status-report';
 import {AppStateService} from '../app-state.service';
 import {PdgaPlayerData} from '../dtos/pdga-player-data';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-individual-membership-checker',

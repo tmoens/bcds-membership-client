@@ -4,6 +4,7 @@ import {ParsingOptions, WorkBook, WorkSheet} from 'xlsx';
 import * as XLSX from 'xlsx';
 import {MembershipService} from '../membership/membershipService';
 import { lastValueFrom} from 'rxjs';
+import {MemberAndPdgaPlayerData} from '../dtos/MemberByPdgaNumber';
 
 @Component({
   selector: 'app-disc-golf-scene-membership-checker',
@@ -86,7 +87,7 @@ export class DiscGolfSceneMembershipCheckerComponent implements OnInit {
 
     this.canSelectFile = true;
     if (resultWb.SheetNames.length > 0) {
-      XLSX.writeFile(resultWb, `ImportResults-${now}.xlsx`);
+      XLSX.writeFile(resultWb, `Membership Check-${now}.xlsx`);
     } else {
       this.problems.push('No imports')
     }
@@ -97,15 +98,16 @@ export class DiscGolfSceneMembershipCheckerComponent implements OnInit {
     const dtos: any[] = XLSX.utils.sheet_to_json(ws);
     this.total = dtos.length;
     this.done = 0;
-    var errorCount = 0;
     for (const dto of dtos) {
-      console.log(dto['PDGA#']);
-      const response: any = await lastValueFrom(this.service.getMembershipByPdgaNumber(dto['PDGA#']));
-      console.log(JSON.stringify(response));
-      this.done = this.done + 1;
+      if (dto['PDGA#']) {
+        const response: MemberAndPdgaPlayerData = await lastValueFrom(this.service.getMembershipByPdgaNumber(dto['PDGA#'])) as MemberAndPdgaPlayerData;
+        dto["BCDS_State"] = response.membership?.state;
+      } else {
+        dto["BCDS_Note"] = 'manual check required';
+      }
       this.progress = this.done / this.total * 100;
+      this.done = this.done + 1;
     }
-    this.notes.push(`Done ${this.done}. Number Errors: ${errorCount}`)
     return XLSX.utils.json_to_sheet(dtos);
   }
 }

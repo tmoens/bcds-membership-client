@@ -1,11 +1,23 @@
-<mat-card style="width: 400px; margin-top: 20px">
-  <h2>BCDS Member Check for a Tournament</h2>
+<mat-card style="width: 600px; margin-top: 20px">
+  <h2>BCDS Member Check</h2>
+  <h3>Using a registration list from Disc Golf Scene</h3>
   <mat-divider></mat-divider>
   <mat-card-content>
     <div>
       <ul>
-        <li>instructions on what to do</li>
-        <li>more instructions</li>
+        <li>Log in to Disc Golf Scene as an admin for your tournament</li>
+        <li>Choose Print/Download List</li>
+        <li>In the bar across the top, select "Full Details"</li>
+        <li>Click the "Download .csv" button</li>
+        <li>Use the file selector button to choose the file</li>
+        <li>Click on the file name to process it.</li>
+        <li>Open the resulting file to see membership information</li>
+        <li>There will be two new columns
+          <ul>
+            <li>BCDS_State which tells the state of the BCDS Membership for the player</li>
+            <li>BCDS_Note which mostly tells you that you have to check non PDGA members manually</li>
+          </ul>
+        </li>
       </ul>
     </div>
     <button [disabled]="!canSelectFile" mat-button color="primary" (click)="openFileChooser()">
@@ -22,7 +34,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="total > 0 || notes.length > 0 || problems.length > 0">
+<mat-card *ngIf="total > 0 || notes.length > 1 || problems.length > 0">
   <mat-card-title>Progress...</mat-card-title>
   <div *ngIf="(total - done) > 0" fxLayout="row" fxLayoutAlign="space-between center">
     <div>Done: {{done}}</div>
